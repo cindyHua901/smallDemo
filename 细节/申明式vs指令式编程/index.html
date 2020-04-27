@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function add(x, y){
+  return x + y;
+}
+
+function sub(x, y){
+  return x - y;
+}
+
+console.log(add(add(add(1,2),3),4));  //不好！！
+console.log([1, 2, 3, 4].reduce(add));
+console.log([1, 2, 3, 4].reduce(sub));
+
+// 写一个**Many方法,
+function addMany(...args){
+  return args.reduce(add)
+}
+
+function subMany(...args){
+  return args.reduce(sub)
+}
+
+// iterative 高阶函数 
+//bind() 方法创建一个新的函数，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，而其余参数将作为新函数的参数，供调用时使用
+function iterative(fn){
+  return function(...args){
+    return args.reduce(fn.bind(this))
+  }
+}
+
+const add = iterative((x,y) => x + y);
+const sub = iterative((x,y) => x - y);
+
+function toggle(...action){
+  return function(...args){
+    // 循环队列噢
+    let action = action.shift();
+    action.push(action);
+    return action.apply(this, args);
+  }
+}
+
+switcher.onClick = toggle(evt=>evt.target.className='off',
+    evt => evt.target.className = 'on')
+
+    // 使用生成器
+    function * loop(list, max=Infinity){
+      let i=0;
+      while(i<max){
+        yield list[i++ % list.length];
+      }
+    }
+
+    function toggle(...action){
+      let action = loop(action);
+      return function(...args) {
+        return action.next().value.apply(this, args);
+      }
+    }
+
+
+  </script>
+</body>
+</html>
